@@ -23,7 +23,6 @@
       left: 0;
       top: 0;
       width: 100vw;
-      height: 100vh;
       object-fit: fill;
       mix-blend-mode: multiply;
       user-select: none;
@@ -56,70 +55,73 @@
   </div>
 
   <script>
-    const convoy = document.getElementById('convoy');
-    const truckWidth = 220;
-    const gap = 30;
-    const convoyWidth = truckWidth * 2 + gap;
-    const truckHeight = 150;
-    const bottomMargin = 20;
+    window.addEventListener('load', () => {
+      const logo = document.getElementById('logo');
+      const convoy = document.getElementById('convoy');
 
-    const groundY = window.innerHeight - truckHeight - bottomMargin;
+      const bottomMargin = 20;
+      const logoGap = 20;
 
-    let x = (window.innerWidth - convoyWidth) / 2;
-    let y = groundY;
-    let vy = 0;
-    const gravity = 0.6;
-    const jumpForce = -16;
-    let onGround = true;
-    const speed = 7;
-    let scaleX = 1;
-    let facingRight = false;
+      const truckHeight = convoy.offsetHeight;
+      const convoyWidth = convoy.offsetWidth;
+      const groundY = window.innerHeight - truckHeight - bottomMargin;
 
-    const keys = {};
+      logo.style.height = (groundY - logoGap) + 'px';
 
-    document.addEventListener('keydown', e => {
-      if (!keys[e.key]) {
-        keys[e.key] = true;
-        if (e.key === ' ' && onGround) {
-          vy = jumpForce;
-          onGround = false;
-          e.preventDefault();
+      let x = (window.innerWidth - convoyWidth) / 2;
+      let y = groundY;
+      let vy = 0;
+      const gravity = 0.6;
+      const jumpForce = -16;
+      let onGround = true;
+      const speed = 7;
+      let scaleX = 1;
+      let facingRight = false;
+
+      const keys = {};
+
+      document.addEventListener('keydown', e => {
+        if (!keys[e.key]) {
+          keys[e.key] = true;
+          if (e.key === ' ' && onGround) {
+            vy = jumpForce;
+            onGround = false;
+            e.preventDefault();
+          }
         }
+      });
+      document.addEventListener('keyup', e => { keys[e.key] = false; });
+
+      function update() {
+        if (keys['ArrowRight']) {
+          if (!facingRight) { scaleX = -1; facingRight = true; }
+          x += speed;
+        }
+        if (keys['ArrowLeft']) {
+          if (facingRight) { scaleX = 1; facingRight = false; }
+          x -= speed;
+        }
+
+        if (x > window.innerWidth) x = -convoyWidth;
+        else if (x < -convoyWidth) x = window.innerWidth;
+
+        vy += gravity;
+        y += vy;
+        if (y >= groundY) {
+          y = groundY;
+          vy = 0;
+          onGround = true;
+        }
+
+        convoy.style.left = x + 'px';
+        convoy.style.top = y + 'px';
+        convoy.style.transform = `scaleX(${scaleX})`;
+
+        requestAnimationFrame(update);
       }
+
+      update();
     });
-    document.addEventListener('keyup', e => { keys[e.key] = false; });
-
-    function update() {
-      if (keys['ArrowRight']) {
-        if (!facingRight) { scaleX = -1; facingRight = true; }
-        x += speed;
-      }
-      if (keys['ArrowLeft']) {
-        if (facingRight) { scaleX = 1; facingRight = false; }
-        x -= speed;
-      }
-
-      // wrap around
-      if (x > window.innerWidth) x = -convoyWidth;
-      else if (x < -convoyWidth) x = window.innerWidth;
-
-      // gravity & jump
-      vy += gravity;
-      y += vy;
-      if (y >= groundY) {
-        y = groundY;
-        vy = 0;
-        onGround = true;
-      }
-
-      convoy.style.left = x + 'px';
-      convoy.style.top = y + 'px';
-      convoy.style.transform = `scaleX(${scaleX})`;
-
-      requestAnimationFrame(update);
-    }
-
-    update();
   </script>
 </body>
 </html>
