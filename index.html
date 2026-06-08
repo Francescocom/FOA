@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Camion</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #FFD700;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #logo {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: fill;
+      mix-blend-mode: multiply;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    #convoy {
+      position: absolute;
+      display: flex;
+      gap: 30px;
+      align-items: flex-end;
+    }
+
+    #convoy img {
+      width: 220px;
+      mix-blend-mode: multiply;
+      user-select: none;
+      pointer-events: none;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <img id="logo" src="1. Immagini/Senza titolo-3 [Recuperato]-03.png" alt="Logo">
+
+  <div id="convoy">
+    <img id="truck1" src="1. Immagini/Senza titolo-3 [Recuperato]-01.png" alt="Furgone 1">
+    <img id="truck2" src="1. Immagini/Senza titolo-3 [Recuperato]-02.png" alt="Furgone 2">
+  </div>
+
+  <script>
+    const convoy = document.getElementById('convoy');
+    const truckWidth = 220;
+    const gap = 30;
+    const convoyWidth = truckWidth * 2 + gap;
+    const truckHeight = 150;
+    const bottomMargin = 20;
+
+    const groundY = window.innerHeight - truckHeight - bottomMargin;
+
+    let x = (window.innerWidth - convoyWidth) / 2;
+    let y = groundY;
+    let vy = 0;
+    const gravity = 0.6;
+    const jumpForce = -16;
+    let onGround = true;
+    const speed = 7;
+    let scaleX = 1;
+    let facingRight = false;
+
+    const keys = {};
+
+    document.addEventListener('keydown', e => {
+      if (!keys[e.key]) {
+        keys[e.key] = true;
+        if (e.key === ' ' && onGround) {
+          vy = jumpForce;
+          onGround = false;
+          e.preventDefault();
+        }
+      }
+    });
+    document.addEventListener('keyup', e => { keys[e.key] = false; });
+
+    function update() {
+      if (keys['ArrowRight']) {
+        if (!facingRight) { scaleX = -1; facingRight = true; }
+        x += speed;
+      }
+      if (keys['ArrowLeft']) {
+        if (facingRight) { scaleX = 1; facingRight = false; }
+        x -= speed;
+      }
+
+      // wrap around
+      if (x > window.innerWidth) x = -convoyWidth;
+      else if (x < -convoyWidth) x = window.innerWidth;
+
+      // gravity & jump
+      vy += gravity;
+      y += vy;
+      if (y >= groundY) {
+        y = groundY;
+        vy = 0;
+        onGround = true;
+      }
+
+      convoy.style.left = x + 'px';
+      convoy.style.top = y + 'px';
+      convoy.style.transform = `scaleX(${scaleX})`;
+
+      requestAnimationFrame(update);
+    }
+
+    update();
+  </script>
+</body>
+</html>
