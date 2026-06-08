@@ -3,19 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Camion</title>
+  <title>FOA</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    @font-face {
+      font-family: 'ABCDiatype';
+      src: url('2. Font/ABCDiatype-Regular.ttf') format('truetype');
+      font-weight: 400;
     }
+    @font-face {
+      font-family: 'ABCDiatype';
+      src: url('2. Font/ABCDiatype-Bold.ttf') format('truetype');
+      font-weight: 700;
+    }
+    @font-face {
+      font-family: 'HoboNo2';
+      src: url('2. Font/Hobo No2 Bold.otf') format('opentype');
+      font-weight: 700;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       background-color: #FF6600;
       width: 100vw;
       height: 100vh;
       overflow: hidden;
+      font-family: 'ABCDiatype', sans-serif;
     }
 
     #logo {
@@ -40,9 +53,76 @@
       width: 220px;
       mix-blend-mode: multiply;
       user-select: none;
-      pointer-events: none;
+      cursor: pointer;
       display: block;
     }
+
+    /* INFO */
+    #info-btn {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      font-family: 'ABCDiatype', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      color: #000;
+      cursor: pointer;
+      z-index: 50;
+      letter-spacing: 0.05em;
+    }
+
+    /* MODALS */
+    .modal {
+      position: fixed;
+      top: 20px;
+      background: #fff;
+      width: 380px;
+      padding: 16px 20px 28px;
+      z-index: 100;
+      display: none;
+    }
+    .modal.visible { display: block; }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'ABCDiatype', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      margin-bottom: 6px;
+    }
+
+    .modal-close {
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      background: none;
+      border: none;
+      font-family: 'ABCDiatype', sans-serif;
+      color: #000;
+    }
+
+    .modal-km {
+      font-family: 'HoboNo2', sans-serif;
+      font-size: 108px;
+      line-height: 0.9;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 18px;
+    }
+
+    .modal-body {
+      font-family: 'ABCDiatype', sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: #000;
+    }
+
+    #modal1 { left: 60px; }
+    #modal2 { left: 460px; }
   </style>
 </head>
 <body>
@@ -52,6 +132,26 @@
   <div id="convoy">
     <img id="truck1" src="1. Immagini/Senza titolo-3 [Recuperato]-01.png" alt="Furgone 1">
     <img id="truck2" src="1. Immagini/Senza titolo-3 [Recuperato]-02.png" alt="Furgone 2">
+  </div>
+
+  <div id="info-btn">INFO</div>
+
+  <div class="modal" id="modal1">
+    <div class="modal-header">
+      <span>FOA</span>
+      <button class="modal-close" onclick="document.getElementById('modal1').classList.remove('visible')">×</button>
+    </div>
+    <div class="modal-km"><span>10</span><span>KM</span></div>
+    <div class="modal-body">Sponsorizza una tratta del viaggio. I tre camion partono da Aosta e arrivano a Messina. Ogni chilometro percorso è documentato. Scegli la tua tratta, il tuo nome va nel libro. Sponsorizza una tratta del viaggio. I tre camion partono da Aosta e arrivano a Messina. Ogni chilometro percorso è documentato. Scegli la tua tratta, il tuo nome va nel libro.</div>
+  </div>
+
+  <div class="modal" id="modal2">
+    <div class="modal-header">
+      <span>FOA</span>
+      <button class="modal-close" onclick="document.getElementById('modal2').classList.remove('visible')">×</button>
+    </div>
+    <div class="modal-km"><span>10</span><span>KM</span></div>
+    <div class="modal-body">Sponsorizza una tratta del viaggio. I tre camion partono da Aosta e arrivano a Messina. Ogni chilometro percorso è documentato. Scegli la tua tratta, il tuo nome va nel libro. Sponsorizza una tratta del viaggio. I tre camion partono da Aosta e arrivano a Messina. Ogni chilometro percorso è documentato. Scegli la tua tratta, il tuo nome va nel libro.</div>
   </div>
 
   <script>
@@ -91,6 +191,13 @@
         }
       });
       document.addEventListener('keyup', e => { keys[e.key] = false; });
+
+      document.getElementById('truck1').addEventListener('click', () => {
+        document.getElementById('modal1').classList.toggle('visible');
+      });
+      document.getElementById('truck2').addEventListener('click', () => {
+        document.getElementById('modal2').classList.toggle('visible');
+      });
 
       function update() {
         if (keys['ArrowRight']) {
