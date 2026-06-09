@@ -82,21 +82,24 @@
       top: 20px;
       background: #fff;
       width: 340px;
+      max-height: 78vh;
       border-radius: 10px;
       overflow: hidden;
-      z-index: 100;
       display: none;
+      flex-direction: column;
+      z-index: 100;
     }
-    .modal.visible { display: block; }
+    .modal.visible { display: flex; }
 
     .modal-header {
+      flex-shrink: 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-family: 'ABCDiatype', sans-serif;
       font-size: 22px;
       font-weight: 500;
-      padding: 8px 10px 7px;
+      padding: 8px 10px 8px;
     }
 
     .modal-close {
@@ -111,24 +114,67 @@
       padding: 0;
     }
 
+    .modal-scroll {
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .modal-image {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: #d4d4d4;
+    }
+
+    .modal-route {
+      font-family: 'ABCDiatype', sans-serif;
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1;
+      padding: 12px 10px 4px;
+    }
+
     .modal-km {
       font-family: 'HoboNo2', sans-serif;
-      font-size: 108px;
+      font-size: 80px;
       line-height: 0.85;
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      padding: 6px 10px 8px;
+      padding: 4px 10px 6px;
     }
 
-    .modal-body {
+    .modal-price {
+      font-family: 'ABCDiatype', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1;
+      padding: 2px 10px 10px;
+    }
+
+    .modal-desc {
       font-family: 'ABCDiatype', sans-serif;
       font-size: 9.5px;
       font-weight: 700;
       line-height: 1.1;
       color: #000;
-      padding: 8px 10px 16px;
+      padding: 0 10px 16px;
     }
+
+    .modal-btn {
+      display: block;
+      margin: 0 10px 16px;
+      background: #000;
+      color: #fff;
+      text-align: center;
+      padding: 12px 10px;
+      font-family: 'ABCDiatype', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      border-radius: 6px;
+      letter-spacing: 0.01em;
+    }
+    .modal-btn:hover { background: #222; }
 
     #modal1 { left: 20px; }
     #modal2 { left: 376px; }
@@ -145,22 +191,36 @@
 
   <div id="info-btn">INFO</div>
 
+  <!-- Modal tratta 1 -->
   <div class="modal" id="modal1">
     <div class="modal-header">
       <span>FOA</span>
       <button class="modal-close" onclick="document.getElementById('modal1').classList.remove('visible')">&times;</button>
     </div>
-    <div class="modal-km"><span>10</span><span>KM</span></div>
-    <div class="modal-body">Sponsorizza una tratta del viaggio. I tre camion partono da Aosta e arrivano a Messina. Ogni chilometro percorso è documentato. Scegli la tua tratta, il tuo nome va nel libro. Sponsorizza una tratta del viaggio. I tre camion partono da Aosta e arrivano a Messina. Ogni chilometro percorso è documentato. Scegli la tua tratta, il tuo nome va nel libro.</div>
+    <div class="modal-scroll">
+      <div class="modal-image"></div>
+      <div class="modal-route">Aosta → Torino</div>
+      <div class="modal-km"><span>120</span><span>KM</span></div>
+      <div class="modal-price">20€</div>
+      <div class="modal-desc">Sponsorizzi la prima tratta del Giro d'Italia FOA. Il tuo nome entra nel libro.</div>
+      <a class="modal-btn" href="https://foa.bigcartel.com/product/aosta-torino" target="_blank">Sponsorizza questa tratta →</a>
+    </div>
   </div>
 
+  <!-- Modal tratta 2 -->
   <div class="modal" id="modal2">
     <div class="modal-header">
       <span>FOA</span>
       <button class="modal-close" onclick="document.getElementById('modal2').classList.remove('visible')">&times;</button>
     </div>
-    <div class="modal-km"><span>10</span><span>KM</span></div>
-    <div class="modal-body">Sponsorizza una tratta del viaggio. I tre camion partono da Aosta e arrivano a Messina. Ogni chilometro percorso è documentato. Scegli la tua tratta, il tuo nome va nel libro. Sponsorizza una tratta del viaggio. I tre camion partono da Aosta e arrivano a Messina. Ogni chilometro percorso è documentato. Scegli la tua tratta, il tuo nome va nel libro.</div>
+    <div class="modal-scroll">
+      <div class="modal-image"></div>
+      <div class="modal-route">Torino → Milano</div>
+      <div class="modal-km"><span>140</span><span>KM</span></div>
+      <div class="modal-price">25€</div>
+      <div class="modal-desc">Sponsorizzi la seconda tratta del Giro d'Italia FOA. Il tuo nome entra nel libro.</div>
+      <a class="modal-btn" href="https://foa.bigcartel.com/product/torino-milano" target="_blank">Sponsorizza questa tratta →</a>
+    </div>
   </div>
 
   <script>
