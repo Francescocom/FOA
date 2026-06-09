@@ -60,9 +60,9 @@
       user-select: none;
       cursor: pointer;
       display: block;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    /* INFO */
     #info-btn {
       position: fixed;
       top: 20px;
@@ -76,22 +76,34 @@
       letter-spacing: 0.05em;
     }
 
-    /* MODALS */
-    .modal {
+    /* PANEL */
+    #panel {
       position: fixed;
       top: 20px;
-      background: #fff;
+      left: 20px;
       width: 340px;
       max-height: 78vh;
       border-radius: 10px;
+      background: #fff;
       overflow: hidden;
       display: none;
       flex-direction: column;
       z-index: 100;
     }
-    .modal.visible { display: flex; }
+    #panel.visible { display: flex; }
 
-    .modal-header {
+    @media (max-width: 600px) {
+      #panel {
+        top: auto;
+        bottom: 20px;
+        left: 16px;
+        right: 16px;
+        width: auto;
+        max-height: 72vh;
+      }
+    }
+
+    #panel-header {
       flex-shrink: 0;
       display: flex;
       justify-content: space-between;
@@ -99,10 +111,10 @@
       font-family: 'ABCDiatype', sans-serif;
       font-size: 22px;
       font-weight: 500;
-      padding: 8px 10px 8px;
+      padding: 8px 10px;
     }
 
-    .modal-close {
+    #panel-close {
       cursor: pointer;
       font-size: 22px;
       font-weight: 500;
@@ -114,18 +126,37 @@
       padding: 0;
     }
 
-    .modal-scroll {
-      overflow-y: auto;
+    /* INFINITE TRACK */
+    #panel-track {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
       flex: 1;
     }
+    #panel-track::-webkit-scrollbar { display: none; }
 
-    .modal-image {
+    /* CARD */
+    .card {
+      flex-shrink: 0;
+      width: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scroll-snap-align: start;
+      overscroll-behavior-y: contain;
+    }
+    .card::-webkit-scrollbar { display: none; }
+    .card { scrollbar-width: none; }
+
+    .card-image {
       width: 100%;
       aspect-ratio: 4 / 3;
       background: #d4d4d4;
     }
 
-    .modal-route {
+    .card-route {
       font-family: 'ABCDiatype', sans-serif;
       font-size: 30px;
       font-weight: 700;
@@ -133,7 +164,7 @@
       padding: 12px 10px 4px;
     }
 
-    .modal-km {
+    .card-km {
       font-family: 'HoboNo2', sans-serif;
       font-size: 80px;
       line-height: 0.85;
@@ -143,7 +174,7 @@
       padding: 4px 10px 6px;
     }
 
-    .modal-price {
+    .card-price {
       font-family: 'ABCDiatype', sans-serif;
       font-size: 28px;
       font-weight: 700;
@@ -151,16 +182,15 @@
       padding: 2px 10px 10px;
     }
 
-    .modal-desc {
+    .card-desc {
       font-family: 'ABCDiatype', sans-serif;
       font-size: 9.5px;
       font-weight: 700;
       line-height: 1.1;
-      color: #000;
-      padding: 0 10px 16px;
+      padding: 0 10px 14px;
     }
 
-    .modal-btn {
+    .card-btn {
       display: block;
       margin: 0 10px 16px;
       background: #000;
@@ -172,12 +202,8 @@
       font-weight: 500;
       text-decoration: none;
       border-radius: 6px;
-      letter-spacing: 0.01em;
     }
-    .modal-btn:hover { background: #222; }
-
-    #modal1 { left: 20px; }
-    #modal2 { left: 376px; }
+    .card-btn:hover { background: #222; }
   </style>
 </head>
 <body>
@@ -191,46 +217,104 @@
 
   <div id="info-btn">INFO</div>
 
-  <!-- Modal tratta 1 -->
-  <div class="modal" id="modal1">
-    <div class="modal-header">
+  <div id="panel">
+    <div id="panel-header">
       <span>FOA</span>
-      <button class="modal-close" onclick="document.getElementById('modal1').classList.remove('visible')">&times;</button>
+      <button id="panel-close">&times;</button>
     </div>
-    <div class="modal-scroll">
-      <div class="modal-image"></div>
-      <div class="modal-route">Aosta → Torino</div>
-      <div class="modal-km"><span>120</span><span>KM</span></div>
-      <div class="modal-price">20€</div>
-      <div class="modal-desc">Sponsorizzi la prima tratta del Giro d'Italia FOA. Il tuo nome entra nel libro.</div>
-      <a class="modal-btn" href="https://foa.bigcartel.com/product/aosta-torino" target="_blank">Sponsorizza questa tratta →</a>
-    </div>
-  </div>
-
-  <!-- Modal tratta 2 -->
-  <div class="modal" id="modal2">
-    <div class="modal-header">
-      <span>FOA</span>
-      <button class="modal-close" onclick="document.getElementById('modal2').classList.remove('visible')">&times;</button>
-    </div>
-    <div class="modal-scroll">
-      <div class="modal-image"></div>
-      <div class="modal-route">Torino → Milano</div>
-      <div class="modal-km"><span>140</span><span>KM</span></div>
-      <div class="modal-price">25€</div>
-      <div class="modal-desc">Sponsorizzi la seconda tratta del Giro d'Italia FOA. Il tuo nome entra nel libro.</div>
-      <a class="modal-btn" href="https://foa.bigcartel.com/product/torino-milano" target="_blank">Sponsorizza questa tratta →</a>
-    </div>
+    <div id="panel-track"></div>
   </div>
 
   <script>
+    const products = [
+      {
+        route: 'Aosta → Torino',
+        km: '120',
+        price: '20€',
+        permalink: 'aosta-torino',
+        desc: 'Sponsorizzi la prima tratta del Giro d\'Italia FOA. Il tuo nome entra nel libro.'
+      },
+      {
+        route: 'Torino → Milano',
+        km: '140',
+        price: '25€',
+        permalink: 'torino-milano',
+        desc: 'Sponsorizzi la seconda tratta del Giro d\'Italia FOA. Il tuo nome entra nel libro.'
+      }
+    ];
+
+    // ── INFINITE CAROUSEL ───────────────────────────────────────────
+    const COPIES = 5;
+    const track = document.getElementById('panel-track');
+    const panel = document.getElementById('panel');
+    let cardWidth = 0;
+    let carouselReady = false;
+
+    function makeCard(p) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-image"></div>
+        <div class="card-route">${p.route}</div>
+        <div class="card-km"><span>${p.km}</span><span>KM</span></div>
+        <div class="card-price">${p.price}</div>
+        <div class="card-desc">${p.desc}</div>
+        <a class="card-btn" href="https://foa.bigcartel.com/product/${p.permalink}" target="_blank">Sponsorizza questa tratta →</a>
+      `;
+      return card;
+    }
+
+    function initCarousel() {
+      track.innerHTML = '';
+      for (let c = 0; c < COPIES; c++) {
+        products.forEach(p => track.appendChild(makeCard(p)));
+      }
+      carouselReady = true;
+    }
+
+    function scrollToIndex(index) {
+      cardWidth = track.clientWidth;
+      const n = products.length;
+      const mid = Math.floor(COPIES / 2);
+      track.scrollLeft = (mid * n + index) * cardWidth;
+    }
+
+    // infinite loop reset (fires after scroll settles)
+    let scrollTimer = null;
+    track.addEventListener('scroll', () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        cardWidth = track.clientWidth;
+        const n = products.length;
+        const setW = n * cardWidth;
+        const lo = setW;
+        const hi = setW * (COPIES - 2);
+        if (track.scrollLeft < lo) {
+          track.scrollLeft += setW * Math.floor(COPIES / 2);
+        } else if (track.scrollLeft > hi) {
+          track.scrollLeft -= setW * Math.floor(COPIES / 2);
+        }
+      }, 120);
+    }, { passive: true });
+
+    function openPanel(index) {
+      if (!carouselReady) initCarousel();
+      panel.classList.add('visible');
+      requestAnimationFrame(() => scrollToIndex(index));
+    }
+
+    document.getElementById('panel-close').addEventListener('click', () => {
+      panel.classList.remove('visible');
+    });
+
+    // ── GAME ────────────────────────────────────────────────────────
     window.addEventListener('load', () => {
-      const logo = document.getElementById('logo');
-      const convoy = document.getElementById('convoy');
+      const logo    = document.getElementById('logo');
+      const convoy  = document.getElementById('convoy');
+      const isMobile = ('ontouchstart' in window) || window.innerWidth < 768;
 
       const bottomMargin = 20;
       const logoGap = 20;
-
       const truckHeight = convoy.offsetHeight;
       const convoyWidth = convoy.offsetWidth;
       const groundY = window.innerHeight - truckHeight - bottomMargin;
@@ -244,55 +328,55 @@
       const jumpForce = -28;
       let onGround = true;
       const speed = 18;
+      const autoSpeed = 1.5;
       let scaleX = 1;
       let facingRight = false;
 
       const keys = {};
 
-      document.addEventListener('keydown', e => {
-        if (!keys[e.key]) {
-          keys[e.key] = true;
-          if (e.key === ' ' && onGround) {
-            vy = jumpForce;
-            onGround = false;
-            e.preventDefault();
+      if (!isMobile) {
+        document.addEventListener('keydown', e => {
+          if (!keys[e.key]) {
+            keys[e.key] = true;
+            if (e.key === ' ' && onGround) {
+              vy = jumpForce;
+              onGround = false;
+              e.preventDefault();
+            }
           }
-        }
-      });
-      document.addEventListener('keyup', e => { keys[e.key] = false; });
+        });
+        document.addEventListener('keyup', e => { keys[e.key] = false; });
+      }
 
-      document.getElementById('truck1').addEventListener('click', () => {
-        document.getElementById('modal1').classList.toggle('visible');
-      });
-      document.getElementById('truck2').addEventListener('click', () => {
-        document.getElementById('modal2').classList.toggle('visible');
-      });
+      document.getElementById('truck1').addEventListener('click', () => openPanel(0));
+      document.getElementById('truck2').addEventListener('click', () => openPanel(1));
 
       function update() {
-        if (keys['ArrowRight']) {
+        if (isMobile) {
+          // autonomous slow rightward drift
           if (!facingRight) { scaleX = -1; facingRight = true; }
-          x += speed;
-        }
-        if (keys['ArrowLeft']) {
-          if (facingRight) { scaleX = 1; facingRight = false; }
-          x -= speed;
-        }
+          x += autoSpeed;
+          if (x > window.innerWidth) x = -convoyWidth;
+        } else {
+          if (keys['ArrowRight']) {
+            if (!facingRight) { scaleX = -1; facingRight = true; }
+            x += speed;
+          }
+          if (keys['ArrowLeft']) {
+            if (facingRight) { scaleX = 1; facingRight = false; }
+            x -= speed;
+          }
+          if (x > window.innerWidth) x = -convoyWidth;
+          else if (x < -convoyWidth) x = window.innerWidth;
 
-        if (x > window.innerWidth) x = -convoyWidth;
-        else if (x < -convoyWidth) x = window.innerWidth;
-
-        vy += gravity;
-        y += vy;
-        if (y >= groundY) {
-          y = groundY;
-          vy = 0;
-          onGround = true;
+          vy += gravity;
+          y += vy;
+          if (y >= groundY) { y = groundY; vy = 0; onGround = true; }
         }
 
         convoy.style.left = x + 'px';
-        convoy.style.top = y + 'px';
+        convoy.style.top  = y + 'px';
         convoy.style.transform = `scaleX(${scaleX})`;
-
         requestAnimationFrame(update);
       }
 
