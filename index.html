@@ -63,7 +63,11 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    #foa-text { cursor: default; }
+    #foa-text {
+      cursor: default;
+      align-self: flex-start;
+      width: auto !important;
+    }
 
     #info-btn {
       position: fixed;
@@ -314,6 +318,15 @@
     window.addEventListener('load', () => {
       const logo    = document.getElementById('logo');
       const convoy  = document.getElementById('convoy');
+      const foaEl   = document.getElementById('foa-text');
+
+      // match FOA height to truck height, width scales proportionally
+      const truck1El = document.getElementById('truck1');
+      function matchFoaHeight() {
+        foaEl.style.height = truck1El.offsetHeight + 'px';
+      }
+      if (truck1El.complete) matchFoaHeight();
+      else truck1El.addEventListener('load', matchFoaHeight);
       const isMobile = ('ontouchstart' in window) || window.innerWidth < 768;
 
       const bottomMargin = 20;
