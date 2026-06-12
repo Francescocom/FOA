@@ -323,7 +323,7 @@
       // match FOA height to truck height, width scales proportionally
       const truck1El = document.getElementById('truck1');
       function matchFoaHeight() {
-        foaEl.style.height = (truck1El.offsetHeight * 1.10) + 'px';
+        foaEl.style.height = (truck1El.offsetHeight * 1.05) + 'px';
       }
       if (truck1El.complete) matchFoaHeight();
       else truck1El.addEventListener('load', matchFoaHeight);
