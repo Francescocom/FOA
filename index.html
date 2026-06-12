@@ -63,11 +63,6 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    #foa-text {
-      cursor: default;
-      align-self: flex-start;
-      width: auto !important;
-    }
 
     #info-btn {
       position: fixed;
@@ -219,7 +214,7 @@
   <div id="convoy">
     <img id="truck1" src="1. Immagini/Senza titolo-3 [Recuperato]-01.png" alt="Furgone 1">
     <img id="truck2" src="1. Immagini/Senza titolo-3 [Recuperato]-02.png" alt="Furgone 2">
-    <img id="foa-text" src="1. Immagini/4-04.png" alt="FOA">
+    <img id="truck3" src="1. Immagini/Senza titolo-3 [Recuperato]-05.png" alt="Furgone 3">
   </div>
 
   <div id="info-btn">INFO</div>
@@ -247,6 +242,13 @@
         price: '25€',
         permalink: 'torino-milano',
         desc: 'Sponsorizzi la seconda tratta del Giro d\'Italia FOA. Il tuo nome entra nel libro.'
+      },
+      {
+        route: 'Milano → Bologna',
+        km: '210',
+        price: '30€',
+        permalink: 'milano-bologna',
+        desc: 'Sponsorizzi la terza tratta del Giro d\'Italia FOA. Il tuo nome entra nel libro.'
       }
     ];
 
@@ -316,17 +318,8 @@
 
     // ── GAME ────────────────────────────────────────────────────────
     window.addEventListener('load', () => {
-      const logo    = document.getElementById('logo');
-      const convoy  = document.getElementById('convoy');
-      const foaEl   = document.getElementById('foa-text');
-
-      // match FOA height to truck height, width scales proportionally
-      const truck1El = document.getElementById('truck1');
-      function matchFoaHeight() {
-        foaEl.style.height = (truck1El.offsetHeight * 1.05) + 'px';
-      }
-      if (truck1El.complete) matchFoaHeight();
-      else truck1El.addEventListener('load', matchFoaHeight);
+      const logo   = document.getElementById('logo');
+      const convoy = document.getElementById('convoy');
       const isMobile = ('ontouchstart' in window) || window.innerWidth < 768;
 
       const bottomMargin = 20;
@@ -366,6 +359,7 @@
 
       document.getElementById('truck1').addEventListener('click', () => openPanel(0));
       document.getElementById('truck2').addEventListener('click', () => openPanel(1));
+      document.getElementById('truck3').addEventListener('click', () => openPanel(2));
 
       function update() {
         if (isMobile) {
