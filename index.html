@@ -55,7 +55,7 @@
     }
 
     #convoy img {
-      width: 220px;
+      width: clamp(100px, 15vw, 260px);
       mix-blend-mode: multiply;
       user-select: none;
       cursor: pointer;
@@ -324,14 +324,27 @@
 
       const bottomMargin = 20;
       const logoGap = 20;
-      const truckHeight = convoy.offsetHeight;
-      const convoyWidth = convoy.offsetWidth;
-      const groundY = window.innerHeight - truckHeight - bottomMargin;
+
+      let truckHeight = convoy.offsetHeight;
+      let convoyWidth = convoy.offsetWidth;
+      let groundY = window.innerHeight - truckHeight - bottomMargin;
 
       logo.style.height = (groundY - logoGap) + 'px';
 
       let x = (window.innerWidth - convoyWidth) / 2;
       let y = groundY;
+
+      function recalculate() {
+        truckHeight = convoy.offsetHeight;
+        convoyWidth = convoy.offsetWidth;
+        groundY = window.innerHeight - truckHeight - bottomMargin;
+        logo.style.height = (groundY - logoGap) + 'px';
+        if (y > groundY) y = groundY;
+        if (x + convoyWidth > window.innerWidth) x = window.innerWidth - convoyWidth;
+        if (x < 0) x = 0;
+      }
+
+      window.addEventListener('resize', recalculate);
       let vy = 0;
       const gravity = 0.6;
       const jumpForce = -28;
